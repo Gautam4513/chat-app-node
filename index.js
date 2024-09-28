@@ -14,7 +14,7 @@ io.on('connection', socket => {
         console.log("New user", name);
         user[socket.id] = name;
         socket.broadcast.emit('user-joined', name);
-
+        io.emit('update-user-count', Object.keys(user).length);
     });
 
     socket.on('send', message => {
@@ -24,6 +24,7 @@ io.on('connection', socket => {
     socket.on('disconnect', message => {
         socket.broadcast.emit('leave', user[socket.id]);
         delete user[socket.id];
+        io.emit('update-user-count', Object.keys(user).length);
     });
 })
 
